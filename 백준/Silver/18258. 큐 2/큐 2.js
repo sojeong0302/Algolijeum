@@ -5,55 +5,34 @@ let input = fs.readFileSync(filePath).toString().trim().split("\n");
 const N = Number(input[0]);
 let queue = [];
 let result = [];
-let front = 0;
-let back = 0;
-
-function push(value) {
-  queue[back++] = value;
-}
-
-function pop() {
-  return front !== back ? queue[front++] : -1;
-}
-
-function size() {
-  return back - front;
-}
-
-function empty() {
-  return front === back ? 1 : 0;
-}
-
-function getFront() {
-  return front !== back ? queue[front] : -1;
-}
-
-function getBack() {
-  return front !== back ? queue[back - 1] : -1;
-}
+let front = 0; // 큐의 맨 앞 인덱스를 가리키는 변수 추가
 
 for (let i = 1; i <= N; i++) {
-  let [cmd, value] = input[i].trim().split(" ");
-  value = value ? Number(value) : null;
+  let [cmd, value] = input[i].split(" ");
+  value = Number(value);
 
   switch (cmd) {
     case "push":
-      push(value);
+      queue.push(value);
       break;
     case "pop":
-      result.push(pop());
+      if (front < queue.length) {
+        result.push(queue[front++]); // front를 이용하여 값을 추출하고 front를 증가시킴
+      } else {
+        result.push(-1);
+      }
       break;
     case "size":
-      result.push(size());
+      result.push(queue.length - front);
       break;
     case "empty":
-      result.push(empty());
+      result.push(front === queue.length ? 1 : 0);
       break;
     case "front":
-      result.push(getFront());
+      result.push(queue.length > front ? queue[front] : -1);
       break;
     case "back":
-      result.push(getBack());
+      result.push(queue.length > front ? queue[queue.length - 1] : -1);
       break;
     default:
       break;
